@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClassTrack — Today's Records · Secondary (V5)</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  :root {
+    --c-bg:#F4F6FA; --c-surface:#FFFFFF; --c-surface-2:#F8FAFC; --c-surface-alt:#EEF2F7;
+    --c-sidebar:#0F2546; --c-sidebar-2:#0A1B36; --c-sidebar-hover:rgba(255,255,255,0.08);
+    --c-sidebar-active:#1B5DAF;
+    --c-border:#D6DBE2; --c-border-2:#E5E8EE; --c-border-strong:#A6ADBB;
+    --c-ink:#0F2546; --c-ink-muted:#475467; --c-ink-subtle:#5C6470;
+    --c-brand:#1B5DAF; --c-brand-ink:#0E2E55; --c-brand-tint:#E8F0FA;
+    --c-success:#1F7A3F; --c-success-tint:#E6F4EC;
+    --c-warning:#9A4708; --c-warning-tint:#FCF1DD; --c-warning-bord:#B97F38;
+    --c-danger:#B42318; --c-danger-tint:#FCE9E7;
+    --c-info:#0E5C8A; --c-info-tint:#E0EFF7;
+    --c-neutral-tint:#EEF1F5; --c-focus:#FFB400;
+    --s-1:4px; --s-2:8px; --s-3:12px; --s-4:16px; --s-5:24px; --s-6:32px;
+    --r-sm:4px; --r-md:6px; --r-lg:10px; --r-xl:14px; --r-pill:999px;
+    --ff:"Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif;
+    --fs-xs:12px; --fs-sm:13px; --fs-md:14px; --fs-lg:16px; --fs-xl:20px; --fs-2xl:24px;
+    --shadow-md:0 4px 12px rgba(15,37,70,0.08);
+    --shadow-lg:0 8px 28px rgba(15,37,70,0.12);
+  }
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  html, body { height:100%; }
+  body { font-family:var(--ff); background:var(--c-bg); color:var(--c-ink); font-size:var(--fs-md); line-height:1.55; -webkit-font-smoothing:antialiased; }
+  a { color:var(--c-brand); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  button { font-family:inherit; cursor:pointer; }
+  :focus-visible { outline:3px solid var(--c-focus); outline-offset:0; box-shadow:0 0 0 6px var(--c-sidebar); border-radius:2px; }
+  .sidebar :focus-visible { box-shadow:none; outline-offset:2px; }
+  .skip-link { position:absolute; top:-40px; left:var(--s-3); background:var(--c-focus); color:#5C3F00; padding:var(--s-2) var(--s-3); border-radius:var(--r-md); font-weight:600; z-index:200; }
+  .skip-link:focus { top:var(--s-2); }
+  .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+  /* WF banner */
+  .wf-banner { background:#FFF6DD; border-bottom:1px solid #F0DA9A; color:#5C3F00; font-size:var(--fs-xs); padding:6px var(--s-4); display:flex; align-items:center; justify-content:space-between; gap:var(--s-4); }
+  .wf-banner__left { display:flex; align-items:center; gap:var(--s-2); }
+  .wf-banner__right { display:flex; align-items:center; gap:var(--s-3); }
+  .wf-banner a { color:#5C3F00; }
+
+  .app { display:grid; grid-template-columns:240px 1fr; min-height:calc(100vh - 32px); }
+
+  /* Sidebar */
+  .sidebar { background:linear-gradient(180deg, var(--c-sidebar) 0%, var(--c-sidebar-2) 100%); color:rgba(255,255,255,0.85); display:flex; flex-direction:column; position:sticky; top:0; height:100vh; overflow-y:auto; }
+  .sidebar__logo { padding:var(--s-5) var(--s-4) var(--s-4); border-bottom:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; gap:var(--s-3); }
+  .sidebar__logo-mark { width:36px; height:36px; background:var(--c-sidebar-active); border-radius:var(--r-lg); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:var(--fs-lg); }
+  .sidebar__logo-text { color:#fff; font-size:16px; font-weight:700; letter-spacing:-0.01em; }
+  .sidebar__logo-sub { color:rgba(255,255,255,0.6); font-size:11px; margin-top:2px; }
+  .sidebar__section { padding:var(--s-4) var(--s-3) var(--s-1); }
+  .sidebar__section-label { text-transform:uppercase; font-size:10px; font-weight:700; letter-spacing:0.12em; color:rgba(255,255,255,0.55); padding:0 var(--s-3); margin-bottom:var(--s-1); }
+  .nav-item { display:flex; align-items:center; gap:var(--s-3); padding:10px var(--s-3); border-radius:var(--r-md); color:rgba(255,255,255,0.78); font-size:var(--fs-sm); font-weight:500; min-height:36px; text-decoration:none; }
+  .nav-item:hover { background:var(--c-sidebar-hover); color:#fff; text-decoration:none; }
+  .nav-item.is-active { background:var(--c-sidebar-active); color:#fff; font-weight:600; }
+  .nav-item .nav-icon { width:20px; text-align:center; font-size:14px; }
+  .nav-item .nav-badge { margin-left:auto; background:var(--c-danger); color:#fff; font-size:11px; font-weight:700; padding:2px 8px; border-radius:var(--r-pill); min-width:22px; text-align:center; }
+  .nav-item .nav-badge--neutral { background:rgba(255,255,255,0.18); color:#fff; }
+  .sidebar__user { margin-top:auto; padding:var(--s-3) var(--s-4); border-top:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; gap:var(--s-3); }
+  .avatar { width:36px; height:36px; border-radius:var(--r-pill); background:var(--c-brand-tint); color:var(--c-brand-ink); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:var(--fs-sm); flex-shrink:0; }
+  .sidebar__user-name { color:#fff; font-size:var(--fs-sm); font-weight:600; }
+  .sidebar__user-role { color:rgba(255,255,255,0.6); font-size:11px; }
+
+  /* Main */
+  .main { display:flex; flex-direction:column; min-width:0; }
+  .topbar { background:var(--c-surface); border-bottom:1px solid var(--c-border); display:flex; align-items:center; gap:var(--s-4); padding:var(--s-3) var(--s-5); position:sticky; top:0; z-index:50; min-height:64px; }
+  .topbar__crumbs { display:flex; align-items:center; gap:var(--s-2); color:var(--c-ink-subtle); font-size:var(--fs-xs); }
+  .topbar__crumbs strong { color:var(--c-ink); font-weight:600; }
+  .topbar__period { margin-left:auto; background:var(--c-brand-tint); color:var(--c-brand-ink); border:1px solid #6E94BF; padding:6px var(--s-3); border-radius:var(--r-md); font-size:var(--fs-xs); font-weight:600; display:inline-flex; align-items:center; gap:var(--s-2); }
+  .topbar__period .dot { width:8px; height:8px; background:var(--c-success); border-radius:50%; }
+  .topbar__actions { display:flex; align-items:center; gap:var(--s-2); }
+  .icon-btn { width:36px; height:36px; border-radius:var(--r-md); background:transparent; border:1px solid transparent; color:var(--c-ink-muted); display:inline-flex; align-items:center; justify-content:center; position:relative; font-size:var(--fs-md); }
+  .icon-btn:hover { background:var(--c-surface-alt); color:var(--c-ink); }
+  .icon-btn__count { position:absolute; top:2px; right:2px; background:var(--c-danger); color:#fff; font-size:10px; font-weight:700; min-width:18px; height:18px; border-radius:var(--r-pill); display:flex; align-items:center; justify-content:center; padding:0 4px; border:2px solid var(--c-surface); }
+  .lang-toggle { display:inline-flex; border:1px solid var(--c-border-strong); border-radius:var(--r-md); overflow:hidden; }
+  .lang-toggle button { background:var(--c-surface); border:0; padding:6px var(--s-3); font-size:var(--fs-xs); font-weight:700; letter-spacing:0.04em; color:var(--c-ink-muted); min-height:32px; min-width:36px; }
+  .lang-toggle button[aria-pressed="true"] { background:var(--c-brand); color:#fff; }
+  .user-chip { display:inline-flex; align-items:center; gap:var(--s-2); padding:4px 10px 4px 4px; border:1px solid var(--c-border); border-radius:var(--r-pill); background:var(--c-surface); font-size:var(--fs-xs); color:var(--c-ink-muted); min-height:36px; }
+  .user-chip .avatar { width:28px; height:28px; font-size:12px; }
+
+  /* Content */
+  .content { padding:var(--s-5); flex:1; display:flex; flex-direction:column; gap:var(--s-4); }
+  .page-header { display:flex; align-items:flex-end; justify-content:space-between; gap:var(--s-4); flex-wrap:wrap; }
+  .page-header h1 { font-size:var(--fs-2xl); font-weight:700; letter-spacing:-0.01em; }
+  .page-header__sub { color:var(--c-ink-muted); font-size:var(--fs-sm); margin-top:4px; }
+  .page-header__actions { display:flex; gap:var(--s-2); flex-wrap:wrap; }
+
+  /* Buttons */
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:8px 14px; border-radius:var(--r-md); font-size:var(--fs-sm); font-weight:600; border:1px solid transparent; min-height:36px; transition:background 0.12s, border-color 0.12s; text-decoration:none; }
+  .btn--primary { background:var(--c-brand); color:#fff; border-color:var(--c-brand); }
+  .btn--primary:hover { background:var(--c-brand-ink); border-color:var(--c-brand-ink); }
+  .btn--secondary { background:var(--c-surface); color:var(--c-ink); border-color:var(--c-border-strong); }
+  .btn--secondary:hover { background:var(--c-surface-alt); }
+  .btn--ghost { background:transparent; color:var(--c-brand); border-color:transparent; }
+  .btn--ghost:hover { background:var(--c-brand-tint); }
+  .btn--sm { padding:4px 10px; min-height:28px; font-size:var(--fs-xs); }
+
+  /* Summary strip */
+  .summary { background:var(--c-surface); border:1px solid var(--c-border); border-radius:var(--r-lg); padding:var(--s-3) var(--s-4); display:flex; gap:var(--s-5); flex-wrap:wrap; align-items:center; font-size:var(--fs-sm); }
+  .summary__stat { display:flex; align-items:baseline; gap:6px; }
+  .summary__stat .v { font-weight:700; color:var(--c-ink); font-variant-numeric:tabular-nums; font-size:var(--fs-lg); }
+  .summary__stat .l { color:var(--c-ink-muted); font-size:var(--fs-xs); }
+  .summary__stat--warn .v { color:var(--c-warning); }
+  .summary__stat--danger .v { color:var(--c-danger); }
+  .summary__stat--info .v { color:var(--c-info); }
+  .summary__stat--success .v { color:var(--c-success); }
+  .summary__divider { width:1px; height:24px; background:var(--c-border-2); align-self:center; }
+
+  /* Toolbar */
+  .toolbar { background:var(--c-surface); border:1px solid var(--c-border); border-radius:var(--r-lg); padding:var(--s-3) var(--s-4); display:flex; gap:var(--s-3); align-items:center; flex-wrap:wrap; }
+  .toolbar__group { display:flex; gap:var(--s-2); align-items:center; flex-wrap:wrap; }
+  .toolbar__sep { width:1px; height:24px; background:var(--c-border-2); }
+  .field-inline { display:inline-flex; align-items:center; gap:6px; }
+  .field-inline label { font-size:var(--fs-xs); font-weight:600; color:var(--c-ink-muted); }
+  .select, .search-input { padding:8px var(--s-3); border:1px solid var(--c-border-strong); border-radius:var(--r-md); background:var(--c-surface); font-family:inherit; font-size:var(--fs-sm); min-height:36px; color:var(--c-ink); }
+  .search-input { padding-left:36px; min-width:220px; }
+  .search { position:relative; }
+  .search i { position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--c-ink-subtle); pointer-events:none; font-size:13px; }
+  .select--period { background:var(--c-brand-tint); color:var(--c-brand-ink); border-color:#6E94BF; font-weight:700; }
+
+  /* Status chips */
+  .status { display:inline-flex; align-items:center; gap:4px; padding:2px 8px; border-radius:var(--r-pill); font-size:11px; font-weight:700; letter-spacing:0.02em; border:1px solid transparent; white-space:nowrap; }
+  .status i { font-size:9px; }
+  .status--present    { background:var(--c-success-tint); color:var(--c-success); border-color:#4F9A6C; }
+  .status--late       { background:var(--c-warning-tint); color:var(--c-warning); border-color:var(--c-warning-bord); }
+  .status--absent     { background:var(--c-danger-tint);  color:var(--c-danger);  border-color:#B0625A; }
+  .status--signed-in  { background:#E3F1FA; color:#0E5C8A; border-color:#5B96BC; }
+  .status--reply      { background:var(--c-info-tint);    color:var(--c-info);    border-color:#5B96BC; }
+  .status--pending    { background:var(--c-info-tint);    color:var(--c-info);    border-color:#5B96BC; }
+  .status--escalated  { background:var(--c-danger-tint);  color:var(--c-danger);  border-color:#B0625A; }
+  .status--resolved   { background:var(--c-success-tint); color:var(--c-success); border-color:#4F9A6C; }
+  .status--period     { background:var(--c-neutral-tint);  color:var(--c-ink);     border-color:var(--c-border-strong); }
+  .status--justified  { background:var(--c-success-tint); color:var(--c-success); border-color:#4F9A6C; }
+  .status--unjustified{ background:var(--c-danger-tint);  color:var(--c-danger);  border-color:#B0625A; }
+  .status--unmarked   { background:var(--c-neutral-tint); color:var(--c-ink-muted); border-color:var(--c-border-strong); }
+  .status--new        { background:var(--c-warning-tint); color:var(--c-warning); border-color:var(--c-warning-bord); }
+
+  .status-cell { display:flex; flex-direction:column; gap:3px; min-width:0; }
+  .status-cell__line { display:inline-flex; align-items:center; gap:6px; flex-wrap:wrap; }
+  .status-cell__meta { font-size:11px; color:var(--c-ink-subtle); }
+
+  /* State badge — suppressed; Record State is encoded in the left row border */
+  .state-badge { display:none; align-self:flex-start; }
+
+  /* Reason tag */
+  .reason-tag { display:inline-flex; align-items:center; gap:6px; padding:6px var(--s-3); border:1px solid var(--c-border); border-radius:var(--r-md); background:var(--c-surface-2); font-size:var(--fs-xs); color:var(--c-ink-muted); }
+  .reason-tag__icon { color:var(--c-brand); }
+  .reason-tag__label { color:var(--c-ink); font-weight:600; }
+  .reason-tag__meta { font-size:11px; padding:2px 8px; border-radius:var(--r-pill); background:var(--c-neutral-tint); color:var(--c-ink-subtle); font-weight:600; }
+  .reason-tag__meta--excluded { background:var(--c-success-tint); color:var(--c-success); }
+  .reason-tag__meta--counted  { background:var(--c-warning-tint); color:var(--c-warning); }
+
+  /* Concurrency cue */
+  .claimed { background:#FFF5E6; color:#804500; border:1px dashed #B97F38; padding:2px 8px; border-radius:var(--r-pill); font-size:11px; font-weight:600; display:inline-flex; align-items:center; gap:4px; }
+
+  /* ── Roster card ───────────────────────────────────────── */
+  .roster-card { background:var(--c-surface); border:1px solid var(--c-border); border-radius:var(--r-lg); overflow:hidden; display:flex; flex-direction:column; flex:1 1 auto; min-height:0; }
+
+  .roster-card__h { padding:var(--s-3) var(--s-4); border-bottom:1px solid var(--c-border-2); display:flex; align-items:center; justify-content:space-between; font-size:var(--fs-xs); color:var(--c-ink-muted); font-weight:600; }
+  .roster-card__h .results { color:var(--c-ink); font-weight:700; }
+
+  /* Tab bar */
+  .tab-bar { display:flex; border-bottom:1px solid var(--c-border); background:var(--c-surface-2); padding:0 var(--s-4); gap:0; overflow-x:auto; }
+  .tab { background:transparent; border:0; border-bottom:3px solid transparent; padding:10px var(--s-4); font-size:var(--fs-sm); font-weight:600; color:var(--c-ink-muted); display:inline-flex; align-items:center; gap:6px; cursor:pointer; margin-bottom:-1px; font-family:inherit; white-space:nowrap; min-height:42px; }
+  .tab:hover { color:var(--c-ink); }
+  .tab[aria-selected="true"] { color:var(--c-brand-ink); border-bottom-color:var(--c-brand); }
+
+  .tab-count { font-size:11px; font-weight:700; padding:1px 8px; border-radius:var(--r-pill); background:var(--c-neutral-tint); color:var(--c-ink-muted); min-width:20px; text-align:center; }
+
+  /* Active tab count colours by state */
+  .tab[data-tab="new"][aria-selected="true"]         .tab-count { background:var(--c-warning-tint); color:var(--c-warning); }
+  .tab[data-tab="in-progress"][aria-selected="true"] .tab-count { background:var(--c-info-tint);    color:var(--c-info); }
+  .tab[data-tab="resolved"][aria-selected="true"]    .tab-count { background:var(--c-success-tint); color:var(--c-success); }
+  .tab[data-tab="all"][aria-selected="true"]         .tab-count { background:var(--c-brand-tint);   color:var(--c-brand-ink); }
+
+  /* Table */
+  .table-wrap { flex:1 1 auto; overflow:auto; min-height:320px; }
+  table.roster { width:100%; border-collapse:collapse; font-size:var(--fs-sm); }
+  table.roster thead th { position:sticky; top:0; z-index:1; background:var(--c-surface-2); border-bottom:1px solid var(--c-border); text-align:left; padding:10px var(--s-3); font-size:11px; font-weight:700; color:var(--c-ink-muted); text-transform:uppercase; letter-spacing:0.06em; }
+  table.roster tbody tr { border-bottom:1px solid var(--c-border-2); transition:background 0.08s; }
+  table.roster tbody tr:hover { background:var(--c-surface-2); cursor:pointer; }
+  table.roster tbody tr.is-selected { background:var(--c-brand-tint); box-shadow:inset 4px 0 0 var(--c-brand); }
+
+  /* Resolved rows — subtle treatment only in All tab */
+  table.roster.show-state tbody tr[data-tab="resolved"] { opacity:0.72; background:#FAFCFA; }
+  table.roster.show-state tbody tr[data-tab="resolved"]:hover { opacity:1; background:var(--c-success-tint); }
+
+  /* ── Record State — left border (structural lifecycle indicator) ─────── */
+  /* New → brand blue  |  In Progress → amber  |  Resolved → neutral gray  */
+  table.roster tbody tr[data-tab="new"]         { box-shadow: inset 4px 0 0 var(--c-brand); }
+  table.roster tbody tr[data-tab="in-progress"] { box-shadow: inset 4px 0 0 #D97706; }
+  table.roster tbody tr[data-tab="resolved"]    { box-shadow: inset 4px 0 0 #6B7280; }
+
+  table.roster tbody td { padding:var(--s-3); vertical-align:middle; }
+  table.roster .col-check   { width:36px; }
+  table.roster .col-student { min-width:230px; }
+  table.roster .col-period  { min-width:140px; }
+  table.roster .col-att     { min-width:100px; }
+  table.roster .col-status  { min-width:200px; }
+  table.roster .col-actions { width:100px; text-align:right; white-space:nowrap; }
+
+  .student-cell { display:grid; grid-template-columns:32px 1fr; gap:var(--s-3); align-items:center; min-width:0; }
+  .student-cell .avatar { width:32px; height:32px; font-size:12px; }
+  .student-cell__name { font-weight:600; color:var(--c-ink); }
+  .student-cell__meta { font-size:11px; color:var(--c-ink-subtle); display:flex; gap:6px; flex-wrap:wrap; }
+  .student-cell__meta strong { color:var(--c-ink-muted); font-weight:600; }
+
+  /* Checkbox */
+  .check { width:20px; height:20px; border:2px solid var(--c-border-strong); border-radius:var(--r-sm); display:inline-flex; align-items:center; justify-content:center; background:var(--c-surface); cursor:pointer; }
+  .check[data-checked="true"] { background:var(--c-brand); border-color:var(--c-brand); color:#fff; }
+  .check[data-checked="true"] i { font-size:11px; }
+
+  /* Bulk bar */
+  .bulkbar { position:fixed; bottom:16px; left:50%; transform:translateX(-50%); background:var(--c-brand-ink); color:#fff; border-radius:var(--r-pill); padding:8px 8px 8px 20px; box-shadow:var(--shadow-lg); display:none; align-items:center; gap:var(--s-3); z-index:80; max-width:92vw; }
+  .bulkbar.is-on { display:inline-flex; }
+  .bulkbar__count { font-weight:600; font-size:var(--fs-sm); }
+  .bulkbar__sep { width:1px; height:20px; background:rgba(255,255,255,0.2); }
+  .bulkbar .btn { background:rgba(255,255,255,0.1); color:#fff; border-color:rgba(255,255,255,0.2); }
+  .bulkbar .btn:hover { background:rgba(255,255,255,0.2); }
+  .bulkbar .btn--primary { background:#fff; color:var(--c-brand-ink); border-color:#fff; }
+
+  /* Drawer */
+  .roster-area { display:grid; grid-template-columns:1fr; gap:0; align-items:stretch; flex:1 1 auto; min-height:0; }
+  .roster-area.has-drawer { grid-template-columns:1fr minmax(360px,440px); gap:var(--s-4); }
+  .drawer { background:var(--c-surface); border:1px solid var(--c-border); border-radius:var(--r-lg); box-shadow:var(--shadow-md); display:flex; flex-direction:column; overflow:hidden; min-height:0; }
+  .drawer[hidden] { display:none; }
+  .drawer__h { padding:var(--s-4) var(--s-5); border-bottom:1px solid var(--c-border-2); display:flex; align-items:center; justify-content:space-between; gap:var(--s-3); }
+  .drawer__h h2 { font-size:var(--fs-lg); font-weight:700; }
+  .drawer__b { padding:var(--s-4) var(--s-5); flex:1 1 auto; overflow-y:auto; }
+  .drawer__hero { display:flex; gap:var(--s-3); align-items:center; margin-bottom:var(--s-4); }
+  .drawer__avatar { width:48px; height:48px; border-radius:var(--r-pill); background:var(--c-brand-tint); color:var(--c-brand-ink); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:18px; flex-shrink:0; }
+  .drawer__name { font-size:var(--fs-lg); font-weight:700; }
+  .drawer__meta { font-size:var(--fs-xs); color:var(--c-ink-muted); }
+  .drawer__id   { font-size:11px; color:var(--c-ink-subtle); margin-top:2px; font-variant-numeric:tabular-nums; }
+  .drawer-section { margin-top:var(--s-4); }
+  .drawer-section h3 { font-size:11px; font-weight:700; color:var(--c-ink-muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:var(--s-2); display:flex; align-items:center; gap:6px; }
+  .day-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
+  .day-strip__cell { background:var(--c-surface-2); border:1px solid var(--c-border-2); border-radius:var(--r-md); padding:var(--s-2); text-align:center; }
+  .day-strip__cell--current { border-color:var(--c-brand); box-shadow:0 0 0 1px var(--c-brand); }
+  .day-strip__lbl  { font-size:10px; color:var(--c-ink-subtle); text-transform:uppercase; letter-spacing:0.06em; font-weight:700; }
+  .day-strip__time { font-size:10px; color:var(--c-ink-subtle); margin-bottom:4px; }
+  .audit { list-style:none; }
+  .audit li { position:relative; padding:0 0 var(--s-3) 24px; font-size:var(--fs-sm); }
+  .audit li::before { content:""; position:absolute; left:7px; top:6px; bottom:-4px; width:2px; background:var(--c-border); }
+  .audit li:last-child::before { display:none; }
+  .audit li::after { content:""; position:absolute; left:3px; top:4px; width:10px; height:10px; border-radius:50%; background:var(--c-brand); border:2px solid var(--c-surface); box-shadow:0 0 0 1px var(--c-brand); }
+  .audit__when { color:var(--c-ink-subtle); font-size:11px; }
+  .audit__who  { font-weight:600; }
+  .drawer__actions { padding:var(--s-3) var(--s-5); border-top:1px solid var(--c-border-2); background:var(--c-surface-2); display:flex; gap:var(--s-2); flex-wrap:wrap; }
+
+  /* Empty state */
+  .empty-state { display:none; flex-direction:column; align-items:center; justify-content:center; gap:var(--s-3); padding:var(--s-6); text-align:center; color:var(--c-ink-muted); font-size:var(--fs-sm); }
+  .empty-state i { font-size:32px; opacity:0.3; }
+  .empty-state p { max-width:280px; }
+  .empty-state.is-visible { display:flex; }
+
+  @media (max-width:880px) {
+    .app { grid-template-columns:1fr; }
+    .sidebar { position:relative; height:auto; flex-direction:row; overflow-x:auto; overflow-y:hidden; }
+    .sidebar__section { padding:var(--s-2); display:flex; flex-direction:row; gap:4px; }
+    .sidebar__section-label, .sidebar__user, .sidebar__logo-text, .sidebar__logo-sub { display:none; }
+    .topbar { flex-wrap:wrap; }
+    .drawer { width:100%; }
+  }
+  @media print { .sidebar,.topbar,.wf-banner,.bulkbar,.drawer { display:none; } .content { padding:0; } }
+</style>
+</head>
+
+<body>
+<a href="#main" class="skip-link">Skip to main content</a>
+
+<div class="wf-banner" role="region" aria-label="Wireframe context">
+  <div class="wf-banner__left">
+    <i class="fa-solid fa-pencil-ruler" aria-hidden="true"></i>
+    <strong>Wireframe — V5 Today's Records · Secondary</strong>
+    <span>· Attendance Clerk Portal · WCAG 2.2 AA</span>
+  </div>
+  <div class="wf-banner__right">
+    <a href="design-rationale.md">Rationale</a>
+    <a href="dashboard.html">Back to dashboard</a>
+  </div>
+</div>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" aria-label="Primary navigation">
+    <div class="sidebar__logo">
+      <div class="sidebar__logo-mark" aria-hidden="true">CT</div>
+      <div>
+        <div class="sidebar__logo-text">ClassTrack</div>
+        <div class="sidebar__logo-sub">EC Catholic · Sainte-Croix</div>
+      </div>
+    </div>
+
+    <nav class="sidebar__section" aria-label="Today">
+      <div class="sidebar__section-label">Today</div>
+      <a href="dashboard.html" class="nav-item">
+        <span class="nav-icon" aria-hidden="true"><i class="fa-solid fa-gauge-high"></i></span>
+        Dashboard
+        <span class="nav-badge" aria-label="9 items">9</span>
+      </a>
+      <a href="todays-records.html" class="nav-item is-active" aria-current="page">
+        <span class="nav-icon" aria-hidden="true"><i class="fa-solid fa-table-list"></i></span>
+        Today's records
+      </a>
+    </nav>
+
+    <nav class="sidebar__section" aria-label="Action required">
+      <div class="sidebar__section-label">Action required</div>
+      <a href="disputes.html" class="nav-item">
+        <span class="nav-icon" aria-hidden="true"><i class="fa-solid fa-triangle-exclamation"></i></span>
+        Disputes
+        <span class="nav-badge" aria-label="2 disputes">2</span>
+      </a>
+      <a href="pending-parent-replies.html" class="nav-item">
+        <span class="nav-icon" aria-hidden="true"><i class="fa-solid fa-envelope-open-text"></i></span>
+        Pending parent replies
+        <span class="nav-badge nav-badge--neutral" aria-label="3 pending">3</span>
+      </a>
+    </nav>
+
+    <nav class="sidebar__section" aria-label="Upcoming">
+      <div class="sidebar__section-label">Upcoming</div>
+      <a href="future-absences.html" class="nav-item">
+        <span class="nav-icon" aria-hidden="true"><i class="fa-solid fa-calendar-days"></i></span>
+        Future absences
+      </a>
+      <a href="group-events.html" class="nav-item">
+        <span class="nav-icon" aria-hidden="true"><i class="fa-solid fa-bus"></i></span>
+        Group events
+      </a>
+    </nav>
+
+    <nav class="sidebar__section" aria-label="Directory">
+      <div class="sidebar__section-label">Directory</div>
+      <a href="students.html" class="nav-item">
+        <span class="nav-icon" aria-hidden="true"><i class="fa-solid fa-user-graduate"></i></span>
+        Students
+        <span class="nav-badge nav-badge--neutral">412</span>
+      </a>
+      <a href="classes.html" class="nav-item">
+        <span class="nav-icon" aria-hidden="true"><i class="fa-solid fa-chalkboard"></i></span>
+        Classes
+        <span class="nav-badge nav-badge--neutral">18</span>
+      </a>
+      <a href="teachers.html" class="nav-item">
+        <span class="nav-icon" aria-hidden="true"><i class="fa-solid fa-chalkboard-user"></i></span>
+        Teachers
+        <span class="nav-badge nav-badge--neutral">32</span>
+      </a>
+    </nav>
+
+    <nav class="sidebar__section" aria-label="Reports">
+      <div class="sidebar__section-label">Reports</div>
+      <a href="daily-attendance.html" class="nav-item">
+        <span class="nav-icon" aria-hidden="true"><i class="fa-solid fa-chart-column"></i></span>
+        Daily attendance
+      </a>
+      <a href="#" class="nav-item">
+        <span class="nav-icon" aria-hidden="true"><i class="fa-solid fa-clock-rotate-left"></i></span>
+        Audit log
+      </a>
+    </nav>
+
+    <div class="sidebar__user">
+      <div class="avatar" aria-hidden="true">MT</div>
+      <div>
+        <div class="sidebar__user-name">Marguerite T.</div>
+        <div class="sidebar__user-role">Attendance Clerk</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <header class="topbar" role="banner">
+      <div class="topbar__crumbs">
+        <a href="dashboard.html">Today</a>
+        <span aria-hidden="true">›</span>
+        <strong>Today's records</strong>
+      </div>
+      <div class="topbar__period" role="status" aria-live="polite">
+        <span class="dot" aria-hidden="true"></span>
+        Period 2 · 10:35 – 11:50 · Thu, May 7, 2026
+      </div>
+      <div class="topbar__actions">
+        <div class="lang-toggle" role="group" aria-label="Language">
+          <button type="button" aria-pressed="true">EN</button>
+          <button type="button" aria-pressed="false">FR</button>
+        </div>
+        <button class="icon-btn" type="button" aria-label="Notifications · 4 unread">
+          <i class="fa-solid fa-bell" aria-hidden="true"></i>
+          <span class="icon-btn__count" aria-hidden="true">4</span>
+        </button>
+        <button class="icon-btn" type="button" aria-label="Help">
+          <i class="fa-solid fa-circle-question" aria-hidden="true"></i>
+        </button>
+        <span class="user-chip">
+          <span class="avatar" aria-hidden="true">MT</span>
+          <span>Marguerite T.</span>
+        </span>
+      </div>
+    </header>
+
+    <main id="main" class="content" tabindex="-1">
+
+      <!-- Page header -->
+      <div class="page-header">
+        <div>
+          <h1>Today's records</h1>
+          <p class="page-header__sub">Late and absent records opened today</p>
+        </div>
+        <div class="page-header__actions">
+          <button class="btn btn--secondary" type="button"><i class="fa-solid fa-print" aria-hidden="true"></i> Print</button>
+          <button class="btn btn--secondary" type="button"><i class="fa-solid fa-file-export" aria-hidden="true"></i> Export</button>
+        </div>
+      </div>
+
+      <!-- Toolbar -->
+      <section class="toolbar" aria-label="Filter and search">
+        <div class="toolbar__group">
+          <div class="field-inline">
+            <label for="fperiod">Period</label>
+            <select id="fperiod" class="select select--period">
+              <option value="p1">P1 · 8:30–9:45 · submitted</option>
+              <option value="p2" selected>P2 · 10:35–11:50 · active now</option>
+              <option value="p3">P3 · 1:05–2:20 · upcoming</option>
+              <option value="p4">P4 · 2:25–3:40 · upcoming</option>
+              <option value="all">All periods today</option>
+            </select>
+          </div>
+        </div>
+        <div class="toolbar__sep" aria-hidden="true"></div>
+        <div class="toolbar__group">
+          <div class="search">
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <label class="sr-only" for="rsearch">Search by student name or ID</label>
+            <input type="search" id="rsearch" class="search-input" placeholder="Search by name or ID…">
+          </div>
+        </div>
+        <div class="toolbar__sep" aria-hidden="true"></div>
+        <div class="toolbar__group">
+          <div class="field-inline">
+            <label for="ftype">Type</label>
+            <select id="ftype" class="select">
+              <option>Late &amp; absent</option>
+              <option>Late only</option>
+              <option>Absent only</option>
+            </select>
+          </div>
+          <div class="field-inline">
+            <label for="fteacher">Teacher</label>
+            <select id="fteacher" class="select">
+              <option>All teachers</option>
+              <option>Ms. Tremblay</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- Roster + drawer -->
+      <div class="roster-area" id="roster-area">
+        <section class="roster-card" aria-labelledby="roster-h">
+
+          <!-- Card header -->
+          <div class="roster-card__h">
+            <div><span class="results" id="visible-count">10</span> records · <span id="tab-label" style="color:var(--c-ink-subtle)">all · sorted by most recent</span></div>
+            <div style="display:flex;gap:6px;">
+              <button class="btn btn--ghost btn--sm" type="button"><i class="fa-solid fa-arrow-down-wide-short" aria-hidden="true"></i> Sort</button>
+              <button class="btn btn--ghost btn--sm" type="button" aria-label="Refresh"><i class="fa-solid fa-rotate" aria-hidden="true"></i></button>
+            </div>
+          </div>
+
+          <!-- Tab bar -->
+          <div class="tab-bar" role="tablist" aria-label="Record state">
+            <button class="tab" role="tab" aria-selected="false" data-tab="new" type="button">
+              New <span class="tab-count">1</span>
+            </button>
+            <button class="tab" role="tab" aria-selected="false" data-tab="in-progress" type="button">
+              In progress <span class="tab-count">6</span>
+            </button>
+            <button class="tab" role="tab" aria-selected="false" data-tab="resolved" type="button">
+              Resolved today <span class="tab-count">3</span>
+            </button>
+            <button class="tab" role="tab" aria-selected="true" data-tab="all" type="button">
+              All <span class="tab-count">10</span>
+            </button>
+          </div>
+
+          <h2 id="roster-h" class="sr-only">Today's attendance records</h2>
+
+          <!-- Table -->
+          <div class="table-wrap">
+            <table class="roster show-state" aria-describedby="roster-h">
+              <thead>
+                <tr>
+                  <th class="col-check" scope="col"><span class="sr-only">Select</span></th>
+                  <th class="col-student" scope="col">Student</th>
+                  <th class="col-period"  scope="col">Period(s)</th>
+                  <th class="col-att"     scope="col">Attendance</th>
+                  <th class="col-status"  scope="col">Record status</th>
+                  <th class="col-actions" scope="col"><span class="sr-only">Actions</span></th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <!-- ══ NEW ══════════════════════════════════════════════ -->
+
+                <!-- Camille Nguyen: absent, notification auto-sent, no human action yet -->
+                <tr tabindex="0" data-key="camille" data-tab="new">
+                  <td><span class="check" data-checked="false" aria-label="Select Camille Nguyen" tabindex="0"></span></td>
+                  <td>
+                    <div class="student-cell">
+                      <span class="avatar" aria-hidden="true">CN</span>
+                      <div>
+                        <div class="student-cell__name">Camille Nguyen</div>
+                        <div class="student-cell__meta"><strong>Gr 11A</strong> · ID 100341 · Ms. Tremblay</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="status status--period"><i class="fa-solid fa-clock" aria-hidden="true"></i> P1 · 8:30–9:45</span></td>
+                  <td><span class="status status--absent"><i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Absent</span></td>
+                  <td>
+                    <div class="status-cell">
+                      <span class="state-badge status status--new"><i class="fa-solid fa-circle-dot" aria-hidden="true"></i> New</span>
+                      <div class="status-cell__line">
+                        <span class="status status--pending"><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i> Awaiting parent reply</span>
+                      </div>
+                      <div class="status-cell__meta">Notification sent · 8:35 AM · no action taken</div>
+                    </div>
+                  </td>
+                  <td class="col-actions"><button class="btn btn--secondary btn--sm" type="button">Open record</button></td>
+                </tr>
+
+                <!-- ══ IN PROGRESS ══════════════════════════════════════ -->
+
+                <!-- Marcus Osei: signed in, awaiting teacher check-in -->
+                <tr tabindex="0" data-key="marcus" data-tab="in-progress">
+                  <td><span class="check" data-checked="false" aria-label="Select Marcus Osei" tabindex="0"></span></td>
+                  <td>
+                    <div class="student-cell">
+                      <span class="avatar" aria-hidden="true">MO</span>
+                      <div>
+                        <div class="student-cell__name">Marcus Osei</div>
+                        <div class="student-cell__meta"><strong>Gr 9B</strong> · ID 100529 · Ms. Tremblay</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="status status--period"><i class="fa-solid fa-clock" aria-hidden="true"></i> P2 · 10:35–11:50</span></td>
+                  <td><span class="status status--signed-in"><i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i> Signed in</span></td>
+                  <td>
+                    <div class="status-cell">
+                      <span class="state-badge status status--pending"><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i> In progress</span>
+                      <div class="status-cell__line">
+                        <span class="status status--pending"><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i> Awaiting check-in</span>
+                      </div>
+                      <div class="status-cell__meta">Signed in at office · 10:42 AM · timer running (8 min)</div>
+                    </div>
+                  </td>
+                  <td class="col-actions"><button class="btn btn--secondary btn--sm" type="button">Open record</button></td>
+                </tr>
+
+                <!-- Isabelle Bouchard: signed in, did not reach class (alert) -->
+                <tr tabindex="0" data-key="isabelle" data-tab="in-progress">
+                  <td><span class="check" data-checked="false" aria-label="Select Isabelle Bouchard" tabindex="0"></span></td>
+                  <td>
+                    <div class="student-cell">
+                      <span class="avatar" aria-hidden="true">IB</span>
+                      <div>
+                        <div class="student-cell__name">Isabelle Bouchard</div>
+                        <div class="student-cell__meta"><strong>Gr 10A</strong> · ID 100673 · Ms. Tremblay</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="status status--period"><i class="fa-solid fa-clock" aria-hidden="true"></i> P2 · 10:35–11:50</span></td>
+                  <td><span class="status status--signed-in"><i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i> Signed in</span></td>
+                  <td>
+                    <div class="status-cell">
+                      <span class="state-badge status status--pending"><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i> In progress</span>
+                      <div class="status-cell__line">
+                        <span class="status status--escalated"><i class="fa-solid fa-person-circle-exclamation" aria-hidden="true"></i> Did not reach class</span>
+                      </div>
+                      <div class="status-cell__meta">Signed in 14 min ago · no teacher check-in</div>
+                    </div>
+                  </td>
+                  <td class="col-actions"><button class="btn btn--secondary btn--sm" type="button">Open record</button></td>
+                </tr>
+
+                <!-- Ryan Kowalski: Late, awaiting parent reply (teacher marked Late directly) -->
+                <tr tabindex="0" data-key="ryan" data-tab="in-progress">
+                  <td><span class="check" data-checked="false" aria-label="Select Ryan Kowalski" tabindex="0"></span></td>
+                  <td>
+                    <div class="student-cell">
+                      <span class="avatar" aria-hidden="true">RK</span>
+                      <div>
+                        <div class="student-cell__name">Ryan Kowalski</div>
+                        <div class="student-cell__meta"><strong>Gr 12A</strong> · ID 100788 · Ms. Tremblay</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="status status--period"><i class="fa-solid fa-clock" aria-hidden="true"></i> P1 · 8:30–9:45</span></td>
+                  <td><span class="status status--late"><i class="fa-solid fa-door-open" aria-hidden="true"></i> Late</span></td>
+                  <td>
+                    <div class="status-cell">
+                      <span class="state-badge status status--pending"><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i> In progress</span>
+                      <div class="status-cell__line">
+                        <span class="status status--pending"><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i> Awaiting parent reply</span>
+                      </div>
+                      <div class="status-cell__meta">Teacher marked Late directly · 9:10 AM</div>
+                    </div>
+                  </td>
+                  <td class="col-actions"><button class="btn btn--secondary btn--sm" type="button">Open record</button></td>
+                </tr>
+
+                <!-- Aisha Mahmoud: Absent, awaiting parent reply (student not located — T8b) -->
+                <tr tabindex="0" data-key="aisha" data-tab="in-progress">
+                  <td><span class="check" data-checked="false" aria-label="Select Aisha Mahmoud" tabindex="0"></span></td>
+                  <td>
+                    <div class="student-cell">
+                      <span class="avatar" aria-hidden="true">AM</span>
+                      <div>
+                        <div class="student-cell__name">Aisha Mahmoud</div>
+                        <div class="student-cell__meta"><strong>Gr 8B</strong> · ID 100456 · Ms. Tremblay</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="status status--period"><i class="fa-solid fa-clock" aria-hidden="true"></i> P2 · 10:35–11:50</span></td>
+                  <td><span class="status status--absent"><i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Absent</span></td>
+                  <td>
+                    <div class="status-cell">
+                      <span class="state-badge status status--pending"><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i> In progress</span>
+                      <div class="status-cell__line">
+                        <span class="status status--pending"><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i> Awaiting parent reply</span>
+                      </div>
+                      <div class="status-cell__meta">Unable to locate · status reverted to Absent · 10:55 AM</div>
+                    </div>
+                  </td>
+                  <td class="col-actions"><button class="btn btn--secondary btn--sm" type="button">Open record</button></td>
+                </tr>
+
+                <!-- Emma Fontaine: Late, pending approval (parent replied) -->
+                <tr tabindex="0" data-key="emma" data-tab="in-progress">
+                  <td><span class="check" data-checked="false" aria-label="Select Emma Fontaine" tabindex="0"></span></td>
+                  <td>
+                    <div class="student-cell">
+                      <span class="avatar" aria-hidden="true">EF</span>
+                      <div>
+                        <div class="student-cell__name">Emma Fontaine</div>
+                        <div class="student-cell__meta"><strong>Gr 11B</strong> · ID 100631 · Ms. Tremblay</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="status status--period"><i class="fa-solid fa-clock" aria-hidden="true"></i> P1 · 8:30–9:45</span></td>
+                  <td><span class="status status--late"><i class="fa-solid fa-door-open" aria-hidden="true"></i> Late</span></td>
+                  <td>
+                    <div class="status-cell">
+                      <span class="state-badge status status--pending"><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i> In progress</span>
+                      <div class="status-cell__line">
+                        <span class="status status--reply"><i class="fa-solid fa-envelope-open-text" aria-hidden="true"></i> Pending approval</span>
+                      </div>
+                      <div class="status-cell__meta">Parent replied · 9:48 AM · Family / personal</div>
+                    </div>
+                  </td>
+                  <td class="col-actions"><button class="btn btn--secondary btn--sm" type="button">Open record</button></td>
+                </tr>
+
+                <!-- Théo Lavoie: Absent, pending approval (parent replied) -->
+                <tr tabindex="0" data-key="theo" data-tab="in-progress">
+                  <td><span class="check" data-checked="false" aria-label="Select Théo Lavoie" tabindex="0"></span></td>
+                  <td>
+                    <div class="student-cell">
+                      <span class="avatar" aria-hidden="true">TL</span>
+                      <div>
+                        <div class="student-cell__name">Théo Lavoie</div>
+                        <div class="student-cell__meta"><strong>Gr 7A</strong> · ID 100287 · Ms. Tremblay</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="status status--period"><i class="fa-solid fa-clock" aria-hidden="true"></i> P1 · 8:30–9:45</span></td>
+                  <td><span class="status status--absent"><i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Absent</span></td>
+                  <td>
+                    <div class="status-cell">
+                      <span class="state-badge status status--pending"><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i> In progress</span>
+                      <div class="status-cell__line">
+                        <span class="status status--reply"><i class="fa-solid fa-envelope-open-text" aria-hidden="true"></i> Pending approval</span>
+                      </div>
+                      <div class="status-cell__meta">Parent replied · 9:12 AM · Illness</div>
+                    </div>
+                  </td>
+                  <td class="col-actions"><button class="btn btn--secondary btn--sm" type="button">Open record</button></td>
+                </tr>
+
+                <!-- ══ RESOLVED ═════════════════════════════════════════ -->
+
+                <!-- Zara Okonkwo: Absent, justified — parent reply approved by clerk -->
+                <tr tabindex="0" data-key="zara" data-tab="resolved">
+                  <td><span class="check" data-checked="false" aria-label="Select Zara Okonkwo" tabindex="0"></span></td>
+                  <td>
+                    <div class="student-cell">
+                      <span class="avatar" aria-hidden="true">ZO</span>
+                      <div>
+                        <div class="student-cell__name">Zara Okonkwo</div>
+                        <div class="student-cell__meta"><strong>Gr 12B</strong> · ID 100862 · Ms. Tremblay</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="status status--period"><i class="fa-solid fa-clock" aria-hidden="true"></i> P1 · 8:30–9:45</span></td>
+                  <td><span class="status status--absent"><i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Absent</span></td>
+                  <td>
+                    <div class="status-cell">
+                      <span class="state-badge status status--resolved"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Resolved</span>
+                      <div class="status-cell__line">
+                        <span class="status status--justified"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Justified · closed</span>
+                      </div>
+                      <div class="status-cell__meta">Parent reply approved · 10:02 AM · Medical appointment</div>
+                    </div>
+                  </td>
+                  <td class="col-actions"><button class="btn btn--secondary btn--sm" type="button">Open record</button></td>
+                </tr>
+
+                <!-- Lucas Bergeron: Late, justified — clerk on behalf (doctor's note) -->
+                <tr tabindex="0" data-key="lucas" data-tab="resolved">
+                  <td><span class="check" data-checked="false" aria-label="Select Lucas Bergeron" tabindex="0"></span></td>
+                  <td>
+                    <div class="student-cell">
+                      <span class="avatar" aria-hidden="true">LB</span>
+                      <div>
+                        <div class="student-cell__name">Lucas Bergeron</div>
+                        <div class="student-cell__meta"><strong>Gr 9A</strong> · ID 100394 · Ms. Tremblay</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="status status--period"><i class="fa-solid fa-clock" aria-hidden="true"></i> P1 · 8:30–9:45</span></td>
+                  <td><span class="status status--late"><i class="fa-solid fa-door-open" aria-hidden="true"></i> Late</span></td>
+                  <td>
+                    <div class="status-cell">
+                      <span class="state-badge status status--resolved"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Resolved</span>
+                      <div class="status-cell__line">
+                        <span class="status status--justified"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Justified · closed</span>
+                      </div>
+                      <div class="status-cell__meta">Justified by clerk · 9:55 AM · Medical appointment</div>
+                    </div>
+                  </td>
+                  <td class="col-actions"><button class="btn btn--secondary btn--sm" type="button">Open record</button></td>
+                </tr>
+
+                <!-- Maya Sinclair: Absent, unjustified — clerk override -->
+                <tr tabindex="0" data-key="maya" data-tab="resolved">
+                  <td><span class="check" data-checked="false" aria-label="Select Maya Sinclair" tabindex="0"></span></td>
+                  <td>
+                    <div class="student-cell">
+                      <span class="avatar" aria-hidden="true">MS</span>
+                      <div>
+                        <div class="student-cell__name">Maya Sinclair</div>
+                        <div class="student-cell__meta"><strong>Gr 10B</strong> · ID 100715 · Ms. Tremblay</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="status status--period"><i class="fa-solid fa-clock" aria-hidden="true"></i> P1 · 8:30–9:45</span></td>
+                  <td><span class="status status--absent"><i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Absent</span></td>
+                  <td>
+                    <div class="status-cell">
+                      <span class="state-badge status status--resolved"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Resolved</span>
+                      <div class="status-cell__line">
+                        <span class="status status--unjustified"><i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Unjustified · closed</span>
+                      </div>
+                      <div class="status-cell__meta">Clerk override · 11:30 AM · No valid justification</div>
+                    </div>
+                  </td>
+                  <td class="col-actions"><button class="btn btn--secondary btn--sm" type="button">Open record</button></td>
+                </tr>
+
+              </tbody>
+            </table>
+
+            <!-- Empty state (shown when a tab has no records) -->
+            <div class="empty-state" id="empty-state" role="status">
+              <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+              <p id="empty-state-msg">No records in this view.</p>
+            </div>
+          </div>
+
+          <div class="roster-card__h" style="border-top:1px solid var(--c-border-2);border-bottom:0;">
+            <div>Showing <strong>10 of 108 records</strong> · scroll to load more</div>
+            <button class="btn btn--ghost btn--sm" type="button">Load more</button>
+          </div>
+
+        </section>
+
+        <!-- DRAWER -->
+        <aside class="drawer" id="drawer" role="region" aria-labelledby="drawer-h" hidden>
+          <div class="drawer__h">
+            <h2 id="drawer-h">Student record</h2>
+            <button class="icon-btn" type="button" id="drawer-close" aria-label="Close drawer">
+              <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+          </div>
+          <div class="drawer__b" id="drawer-body"></div>
+          <div class="drawer__actions" id="drawer-actions"></div>
+        </aside>
+
+      </div><!-- /.roster-area -->
+
+    </main>
+  </div>
+</div>
+
+<!-- Bulk bar -->
+<div class="bulkbar" role="region" aria-label="Bulk actions" id="bulkbar">
+  <span class="bulkbar__count"><span id="bulk-n">0</span> selected</span>
+  <span class="bulkbar__sep" aria-hidden="true"></span>
+  <button class="btn btn--primary" type="button"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Approve</button>
+  <button class="btn" type="button"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Override</button>
+  <button class="btn" type="button"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Notify parents</button>
+  <button class="btn" type="button" id="bulk-clear"><i class="fa-solid fa-xmark" aria-hidden="true"></i> Clear</button>
+</div>
+
+<div class="sr-only" aria-live="polite" id="aria-live"></div>
+
+<script>
+// ── Record data ────────────────────────────────────────────────
+const RECORDS = {
+
+  // ── NEW ──────────────────────────────────────────────────────
+
+  camille: {
+    initials:'CN', name:'Camille Nguyen',
+    meta:'Grade 11A · Ms. Tremblay · École Sainte-Croix',
+    id:'ID 100341 · Aspen ASP-8201',
+    heroChip:{ cls:'absent', icon:'fa-circle-xmark', label:'Absent · P1 today · no action taken' },
+    today:[
+      { p:'P1', t:'8:30–9:45',   cls:'absent',   icon:'fa-circle-xmark', label:'Absent',  current:true  },
+      { p:'P2', t:'10:35–11:50', cls:'unmarked', icon:'fa-circle',       label:'Pending' },
+      { p:'P3', t:'1:05–2:20',   cls:'unmarked', icon:'fa-circle',       label:'Pending' },
+      { p:'P4', t:'2:25–3:40',   cls:'unmarked', icon:'fa-circle',       label:'Pending' },
+    ],
+    scenario:{ title:'Scenario §5.2 — Student no-show · New record', body:'Camille was not at school today. Parent notification was sent automatically at 8:35 AM. <strong>No clerk or parent action has been taken yet.</strong> No action required from the clerk at this stage — record is in the New queue awaiting a parent reply.' },
+    audit:[
+      { when:'Today · 8:30 AM', who:'System',        text:'Period 1 bell.' },
+      { when:'Today · 8:33 AM', who:'Ms. Tremblay',  text:'Marked Camille <strong>Absent</strong> for Period 1.' },
+      { when:'Today · 8:35 AM', who:'System',        text:'Parent notification sent · "Your child is not at school today."' },
+      { when:'Now',             who:'System',        text:'Awaiting parent reply. No clerk action taken.' },
+    ],
+    teacherNote:'"Not in class at bell. No contact from family."',
+    parent:'Patricia Nguyen · patricia.nguyen@example.com · (514) 555-0188',
+    actions:[
+      { kind:'secondary', icon:'fa-paper-plane',               label:'Re-send notification' },
+      { kind:'ghost',     icon:'fa-shield-halved',             label:'Justify on behalf' },
+      { kind:'ghost',     icon:'fa-arrow-up-right-from-square', label:'Open profile' },
+    ],
+  },
+
+  // ── IN PROGRESS ───────────────────────────────────────────────
+
+  marcus: {
+    initials:'MO', name:'Marcus Osei',
+    meta:'Grade 9B · Ms. Tremblay · École Sainte-Croix',
+    id:'ID 100529 · Aspen ASP-8112',
+    heroChip:{ cls:'signed-in', icon:'fa-right-to-bracket', label:'Signed in · P2 · awaiting teacher check-in' },
+    today:[
+      { p:'P1', t:'8:30–9:45',   cls:'present',   icon:'fa-circle-check',    label:'Present' },
+      { p:'P2', t:'10:35–11:50', cls:'signed-in', icon:'fa-right-to-bracket', label:'Signed in', current:true },
+      { p:'P3', t:'1:05–2:20',   cls:'unmarked',  icon:'fa-circle',          label:'Pending' },
+      { p:'P4', t:'2:25–3:40',   cls:'unmarked',  icon:'fa-circle',          label:'Pending' },
+    ],
+    scenario:{ title:'Scenario §5.1 — Late student · awaiting check-in', body:'Marcus arrived at the office at 10:42 AM for Period 2. You signed him in and authorized his return to class. <strong>Waiting for Ms. Tremblay to confirm he has arrived in class.</strong> The 10-minute timer is running (8 min elapsed).' },
+    audit:[
+      { when:'Today · 10:35 AM', who:'System',        text:'Period 2 bell.' },
+      { when:'Today · 10:37 AM', who:'Ms. Tremblay',  text:'Marked Marcus <strong>Absent</strong> for Period 2.' },
+      { when:'Today · 10:42 AM', who:'Marguerite T.', text:'Signed Marcus in · authorized return to class.' },
+      { when:'Now',              who:'System',        text:'Awaiting teacher check-in. Timer running (8 min elapsed).' },
+    ],
+    teacherNote:'"Not in class at bell."',
+    parent:'Kwame Osei · kwame.osei@example.com · (514) 555-0374',
+    actions:[
+      { kind:'secondary', icon:'fa-rotate-left',               label:'Override mark' },
+      { kind:'ghost',     icon:'fa-arrow-up-right-from-square', label:'Open profile' },
+    ],
+  },
+
+  isabelle: {
+    initials:'IB', name:'Isabelle Bouchard',
+    meta:'Grade 10A · Ms. Tremblay · École Sainte-Croix',
+    id:'ID 100673 · Aspen ASP-8087',
+    heroChip:{ cls:'escalated', icon:'fa-person-circle-exclamation', label:'Signed in · did not reach class ⚠' },
+    today:[
+      { p:'P1', t:'8:30–9:45',   cls:'present',   icon:'fa-circle-check',             label:'Present' },
+      { p:'P2', t:'10:35–11:50', cls:'escalated', icon:'fa-person-circle-exclamation', label:'Did not reach class', current:true },
+      { p:'P3', t:'1:05–2:20',   cls:'unmarked',  icon:'fa-circle',                   label:'Pending' },
+      { p:'P4', t:'2:25–3:40',   cls:'unmarked',  icon:'fa-circle',                   label:'Pending' },
+    ],
+    scenario:{ title:'Alert §7 — Signed in, did not reach class', body:'Isabelle was signed in at the office at 10:36 AM for Period 2. Ms. Tremblay has not confirmed her arrival in class. <strong>14 minutes over the 10-minute threshold. Student location is unknown.</strong> Use the Locate action to find her.' },
+    audit:[
+      { when:'Today · 10:35 AM', who:'System',        text:'Period 2 bell.' },
+      { when:'Today · 10:36 AM', who:'Ms. Tremblay',  text:'Marked Isabelle <strong>Absent</strong> for Period 2.' },
+      { when:'Today · 10:36 AM', who:'Marguerite T.', text:'Signed Isabelle in · authorized return to class.' },
+      { when:'Today · 10:46 AM', who:'System',        text:'10-min threshold elapsed · §7 alert fired.' },
+      { when:'Now',              who:'System',        text:'14 min over threshold · teacher has not checked Isabelle in.' },
+    ],
+    teacherNote:'"Signed in by office but never arrived to room."',
+    parent:'Marie-Claude Bouchard · marie.bouchard@example.com · (514) 555-0293',
+    actions:[
+      { kind:'primary',   icon:'fa-circle-check',               label:'Mark as found in class' },
+      { kind:'secondary', icon:'fa-paper-plane',                label:'Notify parent' },
+      { kind:'ghost',     icon:'fa-arrow-up-right-from-square',  label:'Open profile' },
+    ],
+  },
+
+  ryan: {
+    initials:'RK', name:'Ryan Kowalski',
+    meta:'Grade 12A · Ms. Tremblay · École Sainte-Croix',
+    id:'ID 100788 · Aspen ASP-8234',
+    heroChip:{ cls:'late', icon:'fa-door-open', label:'Late · P1 · awaiting parent reply' },
+    today:[
+      { p:'P1', t:'8:30–9:45',   cls:'late',    icon:'fa-door-open',    label:'Late · awaiting reply', current:true },
+      { p:'P2', t:'10:35–11:50', cls:'present', icon:'fa-circle-check', label:'Present' },
+      { p:'P3', t:'1:05–2:20',   cls:'unmarked', icon:'fa-circle',      label:'Pending' },
+      { p:'P4', t:'2:25–3:40',   cls:'unmarked', icon:'fa-circle',      label:'Pending' },
+    ],
+    scenario:{ title:'Scenario §5.1b — Teacher marked Late directly · awaiting parent reply', body:'Ryan arrived in class late without going through the clerk\'s office. Ms. Tremblay marked him Late at 9:10 AM. Parent notification was sent immediately. <strong>Awaiting parent justification reply.</strong>' },
+    audit:[
+      { when:'Today · 8:30 AM', who:'System',       text:'Period 1 bell.' },
+      { when:'Today · 9:10 AM', who:'Ms. Tremblay', text:'Marked Ryan <strong>Late</strong> for Period 1 (arrived mid-class, no office pass).' },
+      { when:'Today · 9:11 AM', who:'System',       text:'Parent notification sent · "Your child arrived late today."' },
+      { when:'Now',             who:'System',       text:'Awaiting parent reply.' },
+    ],
+    teacherNote:'"Walked in at 9:10, no pass. Marked late."',
+    parent:'Barbara Kowalski · b.kowalski@example.com · (514) 555-0612',
+    actions:[
+      { kind:'secondary', icon:'fa-paper-plane',               label:'Re-send notification' },
+      { kind:'ghost',     icon:'fa-shield-halved',             label:'Justify on behalf' },
+      { kind:'ghost',     icon:'fa-arrow-up-right-from-square', label:'Open profile' },
+    ],
+  },
+
+  aisha: {
+    initials:'AM', name:'Aisha Mahmoud',
+    meta:'Grade 8B · Ms. Tremblay · École Sainte-Croix',
+    id:'ID 100456 · Aspen ASP-8063',
+    heroChip:{ cls:'absent', icon:'fa-circle-xmark', label:'Absent · P2 · awaiting parent reply' },
+    today:[
+      { p:'P1', t:'8:30–9:45',   cls:'present', icon:'fa-circle-check', label:'Present' },
+      { p:'P2', t:'10:35–11:50', cls:'absent',  icon:'fa-circle-xmark', label:'Absent · not located', current:true },
+      { p:'P3', t:'1:05–2:20',   cls:'unmarked', icon:'fa-circle',      label:'Pending' },
+      { p:'P4', t:'2:25–3:40',   cls:'unmarked', icon:'fa-circle',      label:'Pending' },
+    ],
+    scenario:{ title:'Scenario §5.1 failure path — Unable to locate · awaiting parent reply', body:'Aisha was signed in at the office but never reached class. After the "Did not reach class" alert fired, you were unable to locate her. <strong>Student status reverted to Absent. Parent has been notified. Awaiting reply.</strong>' },
+    audit:[
+      { when:'Today · 10:35 AM', who:'System',        text:'Period 2 bell.' },
+      { when:'Today · 10:36 AM', who:'Ms. Tremblay',  text:'Marked Aisha <strong>Absent</strong> for Period 2.' },
+      { when:'Today · 10:40 AM', who:'Marguerite T.', text:'Signed Aisha in · authorized return to class.' },
+      { when:'Today · 10:50 AM', who:'System',        text:'10-min threshold elapsed · §7 alert fired.' },
+      { when:'Today · 10:55 AM', who:'Marguerite T.', text:'Unable to locate Aisha · status reverted to <strong>Absent</strong>.' },
+      { when:'Today · 10:56 AM', who:'System',        text:'Parent notification sent · student not located.' },
+      { when:'Now',              who:'System',        text:'Awaiting parent reply.' },
+    ],
+    teacherNote:'"Never made it to class. No idea where she went."',
+    parent:'Fatima Mahmoud · f.mahmoud@example.com · (514) 555-0519',
+    actions:[
+      { kind:'secondary', icon:'fa-paper-plane',               label:'Re-send notification' },
+      { kind:'ghost',     icon:'fa-shield-halved',             label:'Justify on behalf' },
+      { kind:'ghost',     icon:'fa-arrow-up-right-from-square', label:'Open profile' },
+    ],
+  },
+
+  emma: {
+    initials:'EF', name:'Emma Fontaine',
+    meta:'Grade 11B · Ms. Tremblay · École Sainte-Croix',
+    id:'ID 100631 · Aspen ASP-8176',
+    heroChip:{ cls:'reply', icon:'fa-envelope-open-text', label:'P1 Late · pending your approval' },
+    today:[
+      { p:'P1', t:'8:30–9:45',   cls:'reply',   icon:'fa-envelope-open-text', label:'Pending approval', current:true },
+      { p:'P2', t:'10:35–11:50', cls:'present', icon:'fa-circle-check',       label:'Present' },
+      { p:'P3', t:'1:05–2:20',   cls:'unmarked', icon:'fa-circle',            label:'Pending' },
+      { p:'P4', t:'2:25–3:40',   cls:'unmarked', icon:'fa-circle',            label:'Pending' },
+    ],
+    scenario:{ title:'Scenario §5.1 — Parent reply received · awaiting your approval', body:'Emma was marked Late for Period 1 — she arrived at the clerk\'s office at 9:00 AM and was checked in by Ms. Tremblay at 9:06 AM. Parent replied at 9:48 AM with a justification. <strong>Approve to close P1 as Late · justified.</strong>' },
+    category:{ code:'family-personal', label:'Family / personal', countsTowardGrade:true },
+    audit:[
+      { when:'Today · 8:30 AM', who:'System',                    text:'Period 1 bell.' },
+      { when:'Today · 8:32 AM', who:'Ms. Tremblay',              text:'Marked Emma <strong>Absent</strong> for Period 1.' },
+      { when:'Today · 9:00 AM', who:'Marguerite T.',             text:'Signed Emma in · authorized return to class.' },
+      { when:'Today · 9:06 AM', who:'Ms. Tremblay',              text:'Checked Emma in · arrived in class.' },
+      { when:'Today · 9:07 AM', who:'System',                    text:'Parent notification sent · "Your child arrived late today."' },
+      { when:'Today · 9:48 AM', who:'Sophie Fontaine (parent)',  text:'Replied via portal: <em>"Family appointment this morning, ran over schedule."</em>' },
+      { when:'Now',             who:'You',                       text:'Awaiting your approval to close P1 as <strong>Late · justified</strong>.' },
+    ],
+    teacherNote:'"Arrived with office slip at 9:06."',
+    parent:'Sophie Fontaine · sophie.fontaine@example.com · (514) 555-0447',
+    actions:[
+      { kind:'primary',   icon:'fa-circle-check', label:'Approve P1 late' },
+      { kind:'secondary', icon:'fa-flag',         label:'Mark dispute' },
+      { kind:'ghost',     icon:'fa-comment',      label:'Reply to parent' },
+    ],
+  },
+
+  theo: {
+    initials:'TL', name:'Théo Lavoie',
+    meta:'Grade 7A · Ms. Tremblay · École Sainte-Croix',
+    id:'ID 100287 · Aspen ASP-8041',
+    heroChip:{ cls:'reply', icon:'fa-envelope-open-text', label:'P1 Absent · pending your approval' },
+    today:[
+      { p:'P1', t:'8:30–9:45',   cls:'reply',   icon:'fa-envelope-open-text', label:'Pending approval', current:true },
+      { p:'P2', t:'10:35–11:50', cls:'absent',  icon:'fa-circle-xmark',       label:'Absent' },
+      { p:'P3', t:'1:05–2:20',   cls:'absent',  icon:'fa-circle-xmark',       label:'Absent' },
+      { p:'P4', t:'2:25–3:40',   cls:'unmarked', icon:'fa-circle',            label:'Pending' },
+    ],
+    scenario:{ title:'Scenario §5.2 — Parent reply received · awaiting your approval', body:'Théo has been absent since the start of the school day. Parent replied at 9:12 AM with an illness justification. <strong>Approve to close as Absent · justified.</strong>' },
+    category:{ code:'illness', label:'Illness', countsTowardGrade:true },
+    audit:[
+      { when:'Today · 8:30 AM', who:'System',               text:'Period 1 bell.' },
+      { when:'Today · 8:34 AM', who:'Ms. Tremblay',         text:'Marked Théo <strong>Absent</strong> for Period 1.' },
+      { when:'Today · 8:36 AM', who:'System',               text:'Parent notification sent · "Your child is not at school today."' },
+      { when:'Today · 9:12 AM', who:'Marc Lavoie (parent)', text:'Replied via portal: <em>"Théo is home sick today, started this morning."</em>' },
+      { when:'Now',             who:'You',                  text:'Awaiting your approval to close as <strong>Absent · justified</strong>.' },
+    ],
+    teacherNote:'"Absent all morning. Parent called briefly to confirm."',
+    parent:'Marc Lavoie · marc.lavoie@example.com · (514) 555-0322',
+    actions:[
+      { kind:'primary',   icon:'fa-circle-check', label:'Approve absence' },
+      { kind:'secondary', icon:'fa-flag',         label:'Mark dispute' },
+      { kind:'ghost',     icon:'fa-comment',      label:'Reply to parent' },
+    ],
+  },
+
+  // ── RESOLVED ──────────────────────────────────────────────────
+
+  zara: {
+    initials:'ZO', name:'Zara Okonkwo',
+    meta:'Grade 12B · Ms. Tremblay · École Sainte-Croix',
+    id:'ID 100862 · Aspen ASP-8309',
+    heroChip:{ cls:'resolved', icon:'fa-circle-check', label:'Absent · justified · closed' },
+    today:[
+      { p:'P1', t:'8:30–9:45',   cls:'justified', icon:'fa-circle-check', label:'Absent · justified', current:true },
+      { p:'P2', t:'10:35–11:50', cls:'absent',    icon:'fa-circle-xmark', label:'Absent' },
+      { p:'P3', t:'1:05–2:20',   cls:'absent',    icon:'fa-circle-xmark', label:'Absent' },
+      { p:'P4', t:'2:25–3:40',   cls:'absent',    icon:'fa-circle-xmark', label:'Absent' },
+    ],
+    scenario:{ title:'Scenario §5.2 — Closed · parent reply approved', body:'Zara has a specialist medical appointment today. Parent replied at 9:50 AM. You approved the justification at 10:02 AM. <strong>No further action required. Record pushed to Aspen.</strong>' },
+    category:{ code:'medical-appointment', label:'Medical appointment', countsTowardGrade:true },
+    audit:[
+      { when:'Today · 8:30 AM',  who:'System',                    text:'Period 1 bell.' },
+      { when:'Today · 8:34 AM',  who:'Ms. Tremblay',              text:'Marked Zara <strong>Absent</strong> for Period 1.' },
+      { when:'Today · 8:36 AM',  who:'System',                    text:'Parent notification sent.' },
+      { when:'Today · 9:50 AM',  who:'Adaeze Okonkwo (parent)',   text:'Replied via portal: <em>"Zara has a specialist appointment, she will be out all day."</em>' },
+      { when:'Today · 10:02 AM', who:'Marguerite T.',             text:'Approved justification · <strong>Absent · Justified</strong> · Medical appointment.' },
+      { when:'Today · 10:02 AM', who:'System',                    text:'Cycle closed · record pushed to Aspen.' },
+    ],
+    teacherNote:'"Absent all day. Justified by parent via portal."',
+    parent:'Adaeze Okonkwo · adaeze.okonkwo@example.com · (514) 555-0738',
+    actions:[
+      { kind:'secondary', icon:'fa-clock-rotate-left',          label:'View justification' },
+      { kind:'ghost',     icon:'fa-arrow-up-right-from-square', label:'Open profile' },
+    ],
+  },
+
+  lucas: {
+    initials:'LB', name:'Lucas Bergeron',
+    meta:'Grade 9A · Ms. Tremblay · École Sainte-Croix',
+    id:'ID 100394 · Aspen ASP-8157',
+    heroChip:{ cls:'resolved', icon:'fa-circle-check', label:'Late · justified · closed' },
+    today:[
+      { p:'P1', t:'8:30–9:45',   cls:'justified', icon:'fa-circle-check', label:'Late · justified', current:true },
+      { p:'P2', t:'10:35–11:50', cls:'present',   icon:'fa-circle-check', label:'Present' },
+      { p:'P3', t:'1:05–2:20',   cls:'unmarked',  icon:'fa-circle',       label:'Pending' },
+      { p:'P4', t:'2:25–3:40',   cls:'unmarked',  icon:'fa-circle',       label:'Pending' },
+    ],
+    scenario:{ title:'Scenario §5.1 — Closed · clerk justified on behalf', body:'Lucas arrived with a signed doctor\'s note for his late arrival. You attached the note and justified his record on behalf of the family. <strong>No action required. Cycle closed. Parent notified.</strong>' },
+    category:{ code:'medical-appointment', label:'Medical appointment', countsTowardGrade:true },
+    audit:[
+      { when:'Today · 8:30 AM', who:'System',        text:'Period 1 bell.' },
+      { when:'Today · 8:33 AM', who:'Ms. Tremblay',  text:'Marked Lucas <strong>Absent</strong> for Period 1.' },
+      { when:'Today · 9:45 AM', who:'Marguerite T.', text:'Signed Lucas in · authorized return to class.' },
+      { when:'Today · 9:52 AM', who:'Ms. Tremblay',  text:'Checked Lucas in · arrived in class.' },
+      { when:'Today · 9:55 AM', who:'Marguerite T.', text:'Justified on behalf · doctor\'s note attached · <strong>Late · Justified</strong>.' },
+      { when:'Today · 9:55 AM', who:'System',        text:'Informational notification sent to parent · cycle closed · record pushed to Aspen.' },
+    ],
+    teacherNote:'"Arrived with doctor\'s note. Office handled it."',
+    parent:'Nathalie Bergeron · n.bergeron@example.com · (514) 555-0481',
+    actions:[
+      { kind:'secondary', icon:'fa-clock-rotate-left',          label:'View justification' },
+      { kind:'ghost',     icon:'fa-arrow-up-right-from-square', label:'Open profile' },
+    ],
+  },
+
+  maya: {
+    initials:'MS', name:'Maya Sinclair',
+    meta:'Grade 10B · Ms. Tremblay · École Sainte-Croix',
+    id:'ID 100715 · Aspen ASP-8258',
+    heroChip:{ cls:'absent', icon:'fa-circle-xmark', label:'Absent · unjustified · closed' },
+    today:[
+      { p:'P1', t:'8:30–9:45',   cls:'unjustified', icon:'fa-circle-xmark', label:'Absent · unjustified', current:true },
+      { p:'P2', t:'10:35–11:50', cls:'absent',      icon:'fa-circle-xmark', label:'Absent' },
+      { p:'P3', t:'1:05–2:20',   cls:'unmarked',    icon:'fa-circle',       label:'Pending' },
+      { p:'P4', t:'2:25–3:40',   cls:'unmarked',    icon:'fa-circle',       label:'Pending' },
+    ],
+    scenario:{ title:'Scenario §5.2 — Closed · clerk override · unjustified', body:'Maya has been absent since Period 1. After contacting the family and receiving no valid justification, you closed the record as Unjustified at 11:30 AM via a clerk override. <strong>Record locked. Pushed to Aspen as Absent · Unjustified.</strong>' },
+    audit:[
+      { when:'Today · 8:30 AM',  who:'System',        text:'Period 1 bell.' },
+      { when:'Today · 8:35 AM',  who:'Ms. Tremblay',  text:'Marked Maya <strong>Absent</strong> for Period 1.' },
+      { when:'Today · 8:37 AM',  who:'System',        text:'Parent notification sent.' },
+      { when:'Today · 11:28 AM', who:'Marguerite T.', text:'Contacted parent · no valid justification provided.' },
+      { when:'Today · 11:30 AM', who:'Marguerite T.', text:'Override · <strong>Absent · Unjustified</strong> · "No valid justification provided after follow-up."' },
+      { when:'Today · 11:30 AM', who:'System',        text:'Informational notification sent to parent · cycle closed · record pushed to Aspen.' },
+    ],
+    teacherNote:'"Absent all morning. No explanation from family."',
+    parent:'David Sinclair · d.sinclair@example.com · (514) 555-0867',
+    actions:[
+      { kind:'secondary', icon:'fa-clock-rotate-left',          label:'View audit trail' },
+      { kind:'ghost',     icon:'fa-arrow-up-right-from-square', label:'Open profile' },
+    ],
+  },
+};
+
+// ── Drawer render ──────────────────────────────────────────────
+function renderRecord(key) {
+  const r = RECORDS[key]; if (!r) return;
+  const heroChip = `<span class="status status--${r.heroChip.cls}"><i class="fa-solid ${r.heroChip.icon}" aria-hidden="true"></i> ${r.heroChip.label}</span>`;
+  const todayHTML = r.today.map(p => `
+    <div class="day-strip__cell ${p.current ? 'day-strip__cell--current' : ''}" role="listitem">
+      <div class="day-strip__lbl">${p.p}</div>
+      <div class="day-strip__time">${p.t}</div>
+      <span class="status status--${p.cls}"><i class="fa-solid ${p.icon}" aria-hidden="true"></i> ${p.label}</span>
+    </div>`).join('');
+  const auditHTML = r.audit.map(a => `
+    <li>
+      <div class="audit__when">${a.when}</div>
+      <div><span class="audit__who">${a.who}</span> · ${a.text}</div>
+    </li>`).join('');
+  const noteBlock = r.teacherNote
+    ? `<div style="background:var(--c-surface-2);border:1px dashed var(--c-border-strong);border-radius:var(--r-md);padding:var(--s-3);font-size:var(--fs-sm);margin-bottom:var(--s-2);">
+         <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--c-ink-subtle);margin-bottom:4px;">Teacher's note</div>
+         ${r.teacherNote}</div>` : '';
+  const parentBlock = `<div style="background:var(--c-surface-2);border:1px dashed var(--c-border-strong);border-radius:var(--r-md);padding:var(--s-3);font-size:var(--fs-sm);">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--c-ink-subtle);margin-bottom:4px;">Parent contact</div>
+    ${r.parent}</div>`;
+
+  document.getElementById('drawer-body').innerHTML = `
+    <div class="drawer__hero">
+      <div class="drawer__avatar" aria-hidden="true">${r.initials}</div>
+      <div><div class="drawer__name">${r.name}</div><div class="drawer__meta">${r.meta}</div><div class="drawer__id">${r.id}</div></div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:var(--s-3);">${heroChip}</div>
+    <div class="drawer-section">
+      <h3><i class="fa-solid fa-calendar-day" aria-hidden="true"></i> Today across periods</h3>
+      <div class="day-strip" role="list">${todayHTML}</div>
+    </div>
+    <div class="drawer-section">
+      <h3><i class="fa-solid fa-bolt" aria-hidden="true"></i> ${r.scenario.title}</h3>
+      <div style="background:var(--c-surface-2);border:1px solid var(--c-border-2);border-radius:var(--r-md);padding:var(--s-3);font-size:var(--fs-sm);">${r.scenario.body}</div>
+      ${r.category ? `<div style="margin-top:var(--s-3);">
+        <span class="reason-tag">
+          <i class="fa-solid fa-tag reason-tag__icon" aria-hidden="true"></i>
+          <span style="font-size:11px;text-transform:uppercase;letter-spacing:0.04em;">Reason:</span>
+          <span class="reason-tag__label">${r.category.label}</span>
+          <span class="reason-tag__meta reason-tag__meta--${r.category.countsTowardGrade ? 'counted' : 'excluded'}">
+            <i class="fa-solid ${r.category.countsTowardGrade ? 'fa-square-poll-vertical' : 'fa-shield-halved'}" aria-hidden="true"></i>
+            ${r.category.countsTowardGrade ? 'counts toward §2.1 grade impact' : 'excluded from §2.1 grade impact'}
+          </span>
+        </span>
+      </div>` : ''}
+    </div>
+    <div class="drawer-section">
+      <h3><i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i> Audit trail</h3>
+      <ol class="audit">${auditHTML}</ol>
+    </div>
+    <div class="drawer-section">
+      <h3><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Context</h3>
+      ${noteBlock}${parentBlock}
+    </div>`;
+
+  document.getElementById('drawer-actions').innerHTML = r.actions.map(a =>
+    `<button class="btn btn--${a.kind}" type="button"><i class="fa-solid ${a.icon}" aria-hidden="true"></i> ${a.label}</button>`
+  ).join('');
+}
+
+// ── Tab switching ──────────────────────────────────────────────
+const TAB_LABELS = {
+  'new':         'new records · sorted by most recent',
+  'in-progress': 'in progress · sorted by most recent',
+  'resolved':    'resolved today · sorted by most recent',
+  'all':         'all · sorted by most recent',
+};
+const EMPTY_MSGS = {
+  'new':         'No new records right now — all caught up.',
+  'in-progress': 'No records currently in progress.',
+  'resolved':    'No records resolved yet today.',
+  'all':         'No records found.',
+};
+
+const tabs        = document.querySelectorAll('.tab[data-tab]');
+const rosterTable = document.querySelector('table.roster');
+const emptyState  = document.getElementById('empty-state');
+const emptyMsg    = document.getElementById('empty-state-msg');
+const visibleCount = document.getElementById('visible-count');
+const tabLabel    = document.getElementById('tab-label');
+
+function switchTab(name) {
+  tabs.forEach(t => t.setAttribute('aria-selected', t.dataset.tab === name ? 'true' : 'false'));
+
+  const rows = document.querySelectorAll('table.roster tbody tr[data-tab]');
+  let count = 0;
+  rows.forEach(row => {
+    const show = name === 'all' || row.dataset.tab === name;
+    row.style.display = show ? '' : 'none';
+    if (show) count++;
+  });
+
+  // State badges only in All tab
+  rosterTable.classList.toggle('show-state', name === 'all');
+
+  // Empty state
+  if (count === 0) {
+    emptyState.classList.add('is-visible');
+    emptyMsg.textContent = EMPTY_MSGS[name] || 'No records found.';
+  } else {
+    emptyState.classList.remove('is-visible');
+  }
+
+  visibleCount.textContent = count;
+  tabLabel.textContent = TAB_LABELS[name] || '';
+}
+
+tabs.forEach(tab => tab.addEventListener('click', () => switchTab(tab.dataset.tab)));
+
+// Start on All tab
+switchTab('all');
+
+// ── Lang toggle ────────────────────────────────────────────────
+document.querySelectorAll('.lang-toggle button').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.lang-toggle button').forEach(x => x.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true');
+  });
+});
+
+// ── Row click → drawer ─────────────────────────────────────────
+const drawer    = document.getElementById('drawer');
+const closeBtn  = document.getElementById('drawer-close');
+const live      = document.getElementById('aria-live');
+const rosterArea = document.getElementById('roster-area');
+
+function openDrawer(name) { drawer.hidden=false; rosterArea.classList.add('has-drawer'); closeBtn.focus(); live.textContent='Opened record for '+name; }
+function closeDrawer()    { drawer.hidden=true;  rosterArea.classList.remove('has-drawer'); }
+
+document.querySelectorAll('table.roster tbody tr[data-key]').forEach(row => {
+  row.addEventListener('click', e => {
+    if (e.target.closest('button') || e.target.closest('.check')) return;
+    document.querySelectorAll('table.roster tbody tr').forEach(r => r.classList.remove('is-selected'));
+    row.classList.add('is-selected');
+    renderRecord(row.dataset.key);
+    openDrawer(row.dataset.key);
+  });
+  row.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { row.click(); }
+  });
+});
+closeBtn.addEventListener('click', closeDrawer);
+document.addEventListener('keydown', e => { if (e.key==='Escape' && !drawer.hidden) closeDrawer(); });
+
+// ── Checkboxes + bulk bar ──────────────────────────────────────
+const bulkbar = document.getElementById('bulkbar');
+const bulkN   = document.getElementById('bulk-n');
+function refreshBulk() {
+  const n = document.querySelectorAll('.check[data-checked="true"]').length;
+  bulkN.textContent = n;
+  bulkbar.classList.toggle('is-on', n > 0);
+}
+document.querySelectorAll('.check').forEach(c => {
+  c.addEventListener('click', e => {
+    e.stopPropagation();
+    const on = c.getAttribute('data-checked') === 'true';
+    c.setAttribute('data-checked', String(!on));
+    c.innerHTML = !on ? '<i class="fa-solid fa-check" aria-hidden="true"></i>' : '';
+    refreshBulk();
+  });
+  c.addEventListener('keydown', e => {
+    if (e.key===' '||e.key==='Enter') { e.preventDefault(); e.stopPropagation(); c.click(); }
+  });
+});
+document.getElementById('bulk-clear').addEventListener('click', () => {
+  document.querySelectorAll('.check[data-checked="true"]').forEach(c => {
+    c.setAttribute('data-checked','false'); c.innerHTML='';
+  });
+  refreshBulk();
+});
+</script>
+</body>
+</html>
