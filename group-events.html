@@ -388,9 +388,9 @@
         Dashboard
         <span class="nav-badge" aria-label="9 items needing attention">9</span>
       </a>
-      <a href="school-roster.html" class="nav-item">
-        <span class="nav-icon" aria-hidden="true"><i class="fa-solid fa-table-list"></i></span>
-        School roster
+      <a href="today's records.html" class="nav-item">
+        <span class="nav-icon" aria-hidden="true"><i class="fa-solid fa-clipboard-list"></i></span>
+        Today's records
       </a>
     </nav>
     <nav class="sidebar__section" aria-label="Justifications">
@@ -965,7 +965,7 @@
           <div class="roster-mini__name">${st.name}</div>
           <div class="roster-mini__meta">${st.meta}</div>
         </div>
-        <a class="roster-mini__link" href="school-roster.html">Open →</a>
+        <a class="roster-mini__link" href="today's records.html">Open →</a>
       </li>
     `).join('');
 
@@ -1013,7 +1013,7 @@
       </div>
 
       <div class="drawer-section">
-        <h3><i class="fa-solid fa-users" aria-hidden="true"></i> Student roster (${r.students.length}) · linked back to school roster</h3>
+        <h3><i class="fa-solid fa-users" aria-hidden="true"></i> Student roster (${r.students.length}) · linked back to today's records</h3>
         <div class="roster-mini">
           <div class="roster-mini__h">
             <span>${r.students.length} students in this event</span>

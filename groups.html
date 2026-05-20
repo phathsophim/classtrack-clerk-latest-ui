@@ -288,9 +288,9 @@
         Dashboard
         <span class="nav-badge" aria-label="9 items needing attention">9</span>
       </a>
-      <a href="school-roster.html" class="nav-item">
-        <span class="nav-icon" aria-hidden="true"><i class="fa-solid fa-table-list"></i></span>
-        School roster
+      <a href="today's records.html" class="nav-item">
+        <span class="nav-icon" aria-hidden="true"><i class="fa-solid fa-clipboard-list"></i></span>
+        Today's records
       </a>
     </nav>
     <nav class="sidebar__section" aria-label="Justifications">
@@ -659,7 +659,7 @@
       lead: 'Ms. Aubin',
       created: 'Derived · since Aspen integration enabled',
       lastUpdated: 'Today · 2:00 AM (nightly sync)',
-      description: 'All Grade 7C students whose homeroom teacher in Aspen is Ms. Aubin. Auto-derived from Aspen\'s homeroom-assignment field; read-only in ClassTrack. Used most often for homeroom-level messaging (announcements, field-trip permission slips) and for the per-class summary on the school roster.',
+      description: 'All Grade 7C students whose homeroom teacher in Aspen is Ms. Aubin. Auto-derived from Aspen\'s homeroom-assignment field; read-only in ClassTrack. Used most often for homeroom-level messaging (announcements, field-trip permission slips) and for the per-class summary on today\'s records.',
       members: [
         {initials:'OM', name:'Olivia Martínez', meta:'Gr 7C'},
         {initials:'MM', name:'Marcus Mwangi',  meta:'Gr 7C'},
@@ -770,7 +770,7 @@
       <li class="roster-mini__item">
         <span class="roster-mini__avatar" aria-hidden="true">${st.initials}</span>
         <div><div class="roster-mini__name">${st.name}</div><div class="roster-mini__meta">${st.meta}</div></div>
-        <a class="roster-mini__link" href="school-roster.html">Open →</a>
+        <a class="roster-mini__link" href="today's records.html">Open →</a>
       </li>`).join('');
 
     const allUsedByHTML = r.usedBy.map(u => `
