@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ClassTrack — Future Absences (V3)</title>
+<title>ClassTrack — Future Absences (V4)</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
   :root {
@@ -262,7 +262,40 @@
   .status--active-today { background: var(--c-warning-tint); color: var(--c-warning); border-color: var(--c-warning-bord); }
   .status--period    { background: var(--c-neutral-tint); color: var(--c-ink); border-color: var(--c-border-strong); }
 
-  .drawer__actions { padding: var(--s-3) var(--s-4); border-top: 1px solid var(--c-border-2); background: var(--c-surface-2); display: flex; gap: var(--s-2); flex-wrap: wrap; }
+  .drawer__actions { padding: var(--s-3) var(--s-4); border-top: 1px solid var(--c-border-2); background: var(--c-surface-2); display: flex; gap: var(--s-2); flex-wrap: wrap; align-items: center; }
+
+  /* Pending-acknowledgment highlight */
+  .needs-ack-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px; border-radius: var(--r-pill);
+    background: var(--c-warning-tint); color: var(--c-warning);
+    border: 1px solid var(--c-warning-bord);
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  tr.needs-ack { background: #FFFCF5; }
+  tr.needs-ack:hover { background: var(--c-warning-tint) !important; }
+  tr.needs-ack.is-selected { background: var(--c-brand-tint) !important; box-shadow: inset 4px 0 0 var(--c-brand); }
+
+  /* ── More (…) overflow menu ───────────────────────────────── */
+  .more-menu { position:relative; display:inline-block; }
+  .more-menu__dropdown {
+    display:none; position:absolute; bottom:calc(100% + 6px); right:0; z-index:60;
+    background:var(--c-surface); border:1px solid var(--c-border); border-radius:var(--r-md);
+    box-shadow:var(--shadow-lg); min-width:196px; overflow:hidden;
+  }
+  .more-menu__dropdown.is-open { display:block; }
+  .more-menu__label {
+    font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em;
+    color:var(--c-ink-subtle); padding:8px 12px 4px; display:block;
+  }
+  .more-menu__item {
+    display:flex; align-items:center; gap:var(--s-2);
+    padding:8px 12px; font-size:var(--fs-sm); color:var(--c-ink);
+    background:none; border:none; width:100%; text-align:left;
+    font-family:inherit; cursor:pointer; line-height:1.3;
+  }
+  .more-menu__item:hover { background:var(--c-surface-alt); }
+  .more-menu__item i { width:14px; text-align:center; color:var(--c-ink-subtle); font-size:12px; }
 
 
   /* Modal — native <dialog> for focused single-task input */
@@ -426,7 +459,7 @@
 <div class="wf-banner" role="region" aria-label="Wireframe context">
   <div class="wf-banner__left">
     <i class="fa-solid fa-pencil-ruler" aria-hidden="true"></i>
-    <strong>Wireframe — V3 Future Absences</strong>
+    <strong>Wireframe — V4 Future Absences</strong>
     <span>·  Master-detail · WCAG 2.2 AA</span>
   </div>
   <div class="wf-banner__right">
@@ -452,8 +485,8 @@
         Dashboard
         <span class="nav-badge" aria-label="9 items needing attention">9</span>
       </a>
-      <a href="today's records.html" class="nav-item">
-        <span class="nav-icon" aria-hidden="true"><i class="fa-solid fa-clipboard-list"></i></span>
+      <a href="Todays_records_v6.html" class="nav-item">
+        <span class="nav-icon" aria-hidden="true"><i class="fa-solid fa-table-list"></i></span>
         Today's records
       </a>
     </nav>
@@ -597,7 +630,7 @@
         <div class="panel-list">
           <div class="table-card">
             <div class="table-card__h">
-              <div><strong style="color:var(--c-ink);">6 records</strong> · sorted by date (soonest first)</div>
+              <div><strong style="color:var(--c-ink);">7 records</strong> · sorted by date (soonest first) &nbsp;·&nbsp; <span style="color:var(--c-warning); font-weight:700; font-size:12px;"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i> 1 needs acknowledgment</span></div>
               <div style="display:flex; gap:6px;">
                 <button class="btn btn--ghost btn--sm" type="button"><i class="fa-solid fa-arrow-down-wide-short" aria-hidden="true"></i> Sort</button>
                 <button class="btn btn--ghost btn--sm" type="button" aria-label="Refresh"><i class="fa-solid fa-rotate" aria-hidden="true"></i></button>
@@ -617,6 +650,30 @@
                   </tr>
                 </thead>
                 <tbody>
+                  <tr tabindex="0" data-key="jade" class="needs-ack">
+                    <td>
+                      <div class="student-cell">
+                        <span class="avatar" aria-hidden="true">JM</span>
+                        <div>
+                          <div class="student-cell__name">Jade Martin</div>
+                          <div class="student-cell__meta">Gr 8A · Mr. Dupuis</div>
+                          <div style="margin-top:4px;"><span class="needs-ack-badge"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i> Needs acknowledgment</span></div>
+                        </div>
+                      </div>
+                    </td>
+                    <td><div class="dates-cell"><div class="dates-cell__main">Fri May 9</div><div class="dates-cell__sub">In 2 days</div></div></td>
+                    <td><span class="status status--period"><i class="fa-solid fa-clock" aria-hidden="true"></i> All periods</span></td>
+                    <td><span class="reason-tag reason-tag--medical"><i class="fa-solid fa-stethoscope" aria-hidden="true"></i> Medical</span></td>
+                    <td>
+                      <span style="font-size:var(--fs-xs); color:var(--c-ink);">Nadia Martin (parent)</span>
+                      <div style="font-size:11px;color:var(--c-ink-subtle);">via portal · 42 min ago</div>
+                    </td>
+                    <td><span class="countdown countdown--soon"><i class="fa-regular fa-clock" aria-hidden="true"></i> In 2 days</span></td>
+                    <td class="col-actions">
+                      <button class="btn btn--primary btn--sm" type="button" onclick="event.stopPropagation()">Acknowledge</button>
+                    </td>
+                  </tr>
+
                   <tr tabindex="0" data-key="marcus">
                     <td><div class="student-cell"><span class="avatar" aria-hidden="true">MC</span><div><div class="student-cell__name">Marcus Chen</div><div class="student-cell__meta">Gr 9A · Mr. Cardenas</div></div></div></td>
                     <td><div class="dates-cell"><div class="dates-cell__main">Thu May 7</div><div class="dates-cell__sub">Today</div></div></td>
@@ -841,6 +898,44 @@
 
 <script>
   const RECORDS = {
+    jade: {
+      initials:'JM', name:'Jade Martin', meta:'Grade 8A · Mr. Dupuis · École Sainte-Croix',
+      id:'ID 100814 · Aspen ASP-7902',
+      heroChip:{cls:'active-today', icon:'fa-circle-exclamation', label:'Pending acknowledgment · submitted 42 min ago'},
+      acknowledged: false,
+      context:{
+        recordType:{cls:'medical', icon:'fa-stethoscope', label:'Future absence · single day'},
+        dates:'Friday, May 9, 2026',
+        periods:'All periods (P1–P4)',
+        reasonCategory:{label:'Medical appointment', counts:true},
+        declaredBy:'Nadia Martin (parent) · via parent portal',
+        declaredWhen:'Today · 5:15 PM (42 min ago)',
+      },
+      decl:{
+        source:'PORTAL',
+        when:'Today · 5:15 PM (42 min ago)',
+        author:'Nadia Martin (parent)', initials:'NM',
+        quote:'"Jade has a follow-up appointment with her cardiologist on Friday morning. We expect to be back for the afternoon but to be safe I\'ve declared the full day. I can provide a doctor\'s note on request."',
+      },
+      affected:[
+        { date:'Friday, May 9', periods:[
+          {p:'P1',t:'8:30–9:45',affected:true},
+          {p:'P2',t:'10:35–11:50',affected:true},
+          {p:'P3',t:'1:05–2:20',affected:true},
+          {p:'P4',t:'2:25–3:40',affected:true},
+        ]},
+      ],
+      audit:[
+        {when:'Today · 5:15 PM', who:'Nadia Martin (parent)', text:'Declared future absence via parent portal · reason: <strong>Medical appointment</strong>.'},
+        {when:'Today · 5:15 PM', who:'System',                text:'State 19 (Pre-declared · Pending acknowledgment) — visible to clerk only until acknowledged.'},
+        {when:'Now',             who:'You',                   text:'<strong>Acknowledgment required.</strong> Review the declaration and acknowledge to make it active across all portals.'},
+      ],
+      actions:[
+        { kind:'primary',   icon:'fa-circle-check', label:'Acknowledge' },
+        { kind:'secondary', icon:'fa-circle-xmark', label:'Cancel declaration' },
+      ],
+    },
+
     marcus: {
       initials:'MC', name:'Marcus Chen', meta:'Grade 9A · Mr. Cardenas · École Sainte-Croix',
       id:'ID 100245 · Aspen ASP-7884',
@@ -874,9 +969,10 @@
         {when:'Now',              who:'System',             text:'Currently active · cycle already closed.'},
       ],
       actions:[
-        { kind:'danger',   icon:'fa-circle-xmark',   label:'Cancel declaration (student is at school)' },
-        { kind:'secondary',icon:'fa-pen',            label:'Edit category or note' },
-        { kind:'ghost',    icon:'fa-arrow-up-right-from-square', label:'Open record', href:'today's records.html' },
+        { kind:'secondary', icon:'fa-circle-xmark', label:'Cancel declaration' },
+        { kind:'more', items:[
+          { icon:'fa-pen', label:'Edit category or note' },
+        ]},
       ],
     },
 
@@ -913,9 +1009,10 @@
         {when:'Now',                 who:'You',                       text:'No action needed unless plans change.'},
       ],
       actions:[
-        { kind:'danger',   icon:'fa-circle-xmark', label:'Cancel declaration' },
-        { kind:'secondary',icon:'fa-pen',          label:'Edit category or note' },
-        { kind:'ghost',    icon:'fa-arrow-up-right-from-square', label:'Open record', href:'today's records.html' },
+        { kind:'secondary', icon:'fa-circle-xmark', label:'Cancel declaration' },
+        { kind:'more', items:[
+          { icon:'fa-pen', label:'Edit category or note' },
+        ]},
       ],
     },
 
@@ -957,9 +1054,10 @@
         {when:'Now',                    who:'You',                       text:'No action needed.'},
       ],
       actions:[
-        { kind:'secondary', icon:'fa-pen',           label:'Edit details' },
-        { kind:'secondary', icon:'fa-circle-xmark',  label:'Cancel declaration' },
-        { kind:'ghost',     icon:'fa-arrow-up-right-from-square', label:'Open event record', href:'#' },
+        { kind:'secondary', icon:'fa-circle-xmark', label:'Cancel declaration' },
+        { kind:'more', items:[
+          { icon:'fa-pen', label:'Edit details' },
+        ]},
       ],
     },
 
@@ -996,9 +1094,10 @@
         {when:'Now',             who:'You',                     text:'No action needed.'},
       ],
       actions:[
-        { kind:'danger',   icon:'fa-circle-xmark', label:'Cancel declaration' },
-        { kind:'secondary',icon:'fa-pen',          label:'Edit periods or note' },
-        { kind:'ghost',    icon:'fa-arrow-up-right-from-square', label:'Open record', href:'today's records.html' },
+        { kind:'secondary', icon:'fa-circle-xmark', label:'Cancel declaration' },
+        { kind:'more', items:[
+          { icon:'fa-pen', label:'Edit periods or note' },
+        ]},
       ],
     },
 
@@ -1043,9 +1142,10 @@
         {when:'Now',              who:'You',              text:'No action needed.'},
       ],
       actions:[
-        { kind:'danger',   icon:'fa-circle-xmark', label:'Cancel declaration' },
-        { kind:'secondary',icon:'fa-pen',          label:'Edit category or note' },
-        { kind:'ghost',    icon:'fa-arrow-up-right-from-square', label:'Open record', href:'today's records.html' },
+        { kind:'secondary', icon:'fa-circle-xmark', label:'Cancel declaration' },
+        { kind:'more', items:[
+          { icon:'fa-pen', label:'Edit category or note' },
+        ]},
       ],
     },
 
@@ -1082,9 +1182,10 @@
         {when:'Now',                      who:'You',                    text:'No action needed.'},
       ],
       actions:[
-        { kind:'danger',   icon:'fa-circle-xmark', label:'Cancel declaration' },
-        { kind:'secondary',icon:'fa-pen',          label:'Edit category or note' },
-        { kind:'ghost',    icon:'fa-arrow-up-right-from-square', label:'Open record', href:'today's records.html' },
+        { kind:'secondary', icon:'fa-circle-xmark', label:'Cancel declaration' },
+        { kind:'more', items:[
+          { icon:'fa-pen', label:'Edit category or note' },
+        ]},
       ],
     },
   };
@@ -1194,11 +1295,48 @@
       </details>
     `;
 
+    // Render drawer actions — primary / secondary and 'more' overflow
     document.getElementById('drawer-actions').innerHTML = r.actions.map(a => {
-      if (a.href) return `<a class="btn btn--${a.kind}" href="${a.href}"><i class="fa-solid ${a.icon}" aria-hidden="true"></i> ${a.label}</a>`;
+      if (a.kind === 'more') {
+        const items = a.items.map(item =>
+          `<button class="more-menu__item" type="button"><i class="fa-solid ${item.icon}" aria-hidden="true"></i> ${item.label}</button>`
+        ).join('');
+        return `<div class="more-menu">
+          <button class="btn btn--secondary more-menu__btn" type="button"
+            aria-haspopup="true" aria-expanded="false" aria-label="More actions"
+            style="padding:8px 10px; min-width:36px;">
+            <i class="fa-solid fa-ellipsis" aria-hidden="true"></i>
+          </button>
+          <div class="more-menu__dropdown" role="menu">
+            <span class="more-menu__label">More actions</span>
+            ${items}
+          </div>
+        </div>`;
+      }
       return `<button class="btn btn--${a.kind}" type="button"><i class="fa-solid ${a.icon}" aria-hidden="true"></i> ${a.label}</button>`;
     }).join('');
+
+    // Wire overflow toggle
+    document.querySelectorAll('#drawer-actions .more-menu__btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        const dd = btn.nextElementSibling;
+        const open = dd.classList.toggle('is-open');
+        btn.setAttribute('aria-expanded', String(open));
+      });
+    });
   }
+
+  // Close all more-menu dropdowns when clicking outside
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.more-menu')) {
+      document.querySelectorAll('.more-menu__dropdown.is-open').forEach(dd => {
+        dd.classList.remove('is-open');
+        const btn = dd.previousElementSibling;
+        if (btn) btn.setAttribute('aria-expanded', 'false');
+      });
+    }
+  });
 
   // Lang toggle
   document.querySelectorAll('.lang-toggle button').forEach(b => {
